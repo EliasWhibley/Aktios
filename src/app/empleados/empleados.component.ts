@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 
 import data from 'src/assets/json/datasource.json';
 import empleados from 'src/assets/json/info-population.json';
-import { Person } from '../models/empleado';
+import { Persona } from '../models/person';
 
 @Component({
   selector: 'app-empleados',
@@ -11,24 +11,28 @@ import { Person } from '../models/empleado';
   styleUrls: ['./empleados.component.css']
 })
 export class EmpleadosComponent implements OnInit {
-  empleadosActivos: Array<Person> = [];
+  empleadosActivos: Array<Persona> = [];
   data: any;
-  page: number = 1;
-  pageSize: number = 10;
+  page: number;
+  pageSize: number;
   searchValue: FormControl = new FormControl;
   constructor() {
+    this.page = 1;
+    this.pageSize = 10;
+    this.empleadosActivos = empleados.population['person'];
     this.data = data.data;
   }
 
+  //Comencé creando una clase debido a que últimamente no salgo de PHP y Laravel, y luego creé la interface. Os dejo el mapeo de datos que usé para la clase. Ya no sirve de nada, pero lo dejo de muestra.
+
   ngOnInit(): void {
-    this.mapEmpleados();
+    /* this.mapEmpleados(); */
     this.findSex();
     this.findPhone();
     this.findCountry();
-    console.log(this.empleadosActivos);
   }
 
-  mapEmpleados() {
+  /* mapEmpleados() {
     this.empleadosActivos = [];
     for (let empleado of empleados.population['person']) {
       this.empleadosActivos.push(
@@ -36,7 +40,9 @@ export class EmpleadosComponent implements OnInit {
       )
 
     }
-  }
+  } */
+
+  //Para buscar el sexo en el 2º JSON
   findSex() {
     let sexos = this.data.sex
     this.empleadosActivos.map(empleado => {
@@ -48,31 +54,39 @@ export class EmpleadosComponent implements OnInit {
     })
   };
 
+  //Para buscar el prefijo en el 2º JSON
   findPhone() {
     let paises = this.data.country
     this.empleadosActivos.map(empleado => {
       for (let pais of paises) {
-        if (empleado.countryid === pais.id) {
+        if (empleado['country-id'] === pais.id) {
           empleado.phone = "+(" + pais.prefix + ")" + empleado.phone;
         }
       }
     })
   };
 
+  //Para buscar el país en el 2º JSON
   findCountry() {
     let paises = this.data.country
     this.empleadosActivos.map(empleado => {
       for (let pais of paises) {
-        if (empleado.countryid === pais.id) {
+        if (empleado['country-id'] === pais.id) {
           empleado.country = pais.description
         }
       }
     })
   };
 
+  //Switch que ordena la tabla
   sortTable(event: any) {
     let res = event.target.value;
     switch (res) {
+      case 'id':
+        this.empleadosActivos.sort(function (a, b) {
+          return a.id - b.id;
+        });
+        break;
       case 'name':
         this.empleadosActivos.sort(function (a, b) {
           return ('' + a.name).localeCompare(b.name);
@@ -93,6 +107,11 @@ export class EmpleadosComponent implements OnInit {
           return ('' + a.phone).localeCompare(b.phone);
         });
         break;
+      case 'country':
+        this.empleadosActivos.sort(function (a, b) {
+          return ('' + a.country).localeCompare(b.country);
+        });
+        break;
       case 'lastModification':
         this.empleadosActivos.sort(function (a, b) {
           return +new Date(b.lastModification) - +new Date(a.lastModification);
@@ -101,26 +120,17 @@ export class EmpleadosComponent implements OnInit {
     }
 
   };
+
+  //Función para la búsqueda de parámetros en la tabla
   updateResults() {
-
-    if (this.searchValue.value.toLowerCase() == '') {
-      this.mapEmpleados();
+    let search = this.searchValue.value.toLowerCase();
+    if (search == '') {
+      this.empleadosActivos = empleados.population['person'];
     } else {
-
-      for (let empleado of this.empleadosActivos) {
-        empleado.country
-        for (let data in empleado) {
-          console.log(data);
-          if (data.toLowerCase().includes(this.searchValue.value.toLowerCase())) {
-            this.empleadosActivos = [];
-            this.empleadosActivos.push(empleado);
-
-          }
-        }
-
-      }
+      this.empleadosActivos = empleados.population['person'].filter((empleado: Persona) => {
+        return empleado.name.toLowerCase().includes(search) || empleado.surname.toLowerCase().includes(search) || empleado.surname2.toLowerCase().includes(search) || empleado.sex.toLowerCase().includes(search) || empleado.phone.toLowerCase().includes(search) || empleado.datebirthday.toLowerCase().includes(search) || empleado.lastModification.toLowerCase().includes(search) || empleado.country.toLowerCase().includes(search);
+      })
     }
-    console.log(this.searchValue.value.toLowerCase())
   };
 
 

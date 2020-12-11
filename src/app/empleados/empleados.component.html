@@ -1,15 +1,18 @@
 <div class="container mt-4">
     <div class="card">
         <div class="card-body">
+          
             <span class="h3">Listado de empleados</span>
-            <select (change)=sortTable($event) name="order" id="order">
+            <select class="ml-5" (change)=sortTable($event) name="order" id="order">
+              <option value="id" selected>Escoge filtro</option>
               <option  value="name">Nombre</option>
               <option value="datebirthday">Fecha de nacimiento</option>
               <option value="sex">Sexo</option>
               <option value="phone">Telefono</option>
+              <option value="country">País</option>
               <option value="lastModification">Ult. Modificación</option>
             </select>
-            
+              <label class="ml-5" for="searchValue">Buscador</label>
               <input type="text" name="searchValue" id="searchValue" [formControl]="searchValue">
               <button (click)="updateResults()" class="btn btn-success">Buscar</button>
             
@@ -39,6 +42,7 @@
                   
                 </tbody>
               </table>
+              <!-- He utilizado ng-bootstrap para crear el paginador -->
               <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="empleadosActivos.length" [maxSize]="5"></ngb-pagination>
         </div>
     </div>
