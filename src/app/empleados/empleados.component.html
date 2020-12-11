@@ -1,0 +1,30 @@
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-body">
+            <span class="h3">Listado de empleados</span>
+            <table class="table table-dark">
+                <thead>
+                  <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Fecha de nacimiento</th>
+                    <th scope="col">Sexo</th>
+                    <th scope="col">Telefono</th>
+                    <th scope="col">País</th>
+                    <th scope="col">Ult. Modificación</th>
+                  </tr>
+                </thead>
+                <tbody *ngFor="let empleado of empleados">
+                  <tr>
+                    <th scope="row">{{empleado.surname}} {{empleado.surname2}}, {{empleado.name}}</th>
+                    <td>{{empleado.datebirthday | date: 'yyyy-MM-dd' }}</td>
+                    <td>{{empleado.sex}}</td>
+                    <td>{{empleado.phone}}</td>
+                    <td>{{empleado.country}}</td>
+                    <td>{{empleado.lastModification | date: 'yyyy-MM-dd HH:mm'}}</td>
+                  </tr>
+                  
+                </tbody>
+              </table>
+        </div>
+    </div>
+</div>
