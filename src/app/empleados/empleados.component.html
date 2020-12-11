@@ -2,10 +2,23 @@
     <div class="card">
         <div class="card-body">
             <span class="h3">Listado de empleados</span>
+            <select (change)=sortTable($event) name="order" id="order">
+              <option  value="name">Nombre</option>
+              <option value="datebirthday">Fecha de nacimiento</option>
+              <option value="sex">Sexo</option>
+              <option value="phone">Telefono</option>
+              <option value="lastModification">Ult. Modificación</option>
+            </select>
+            
+              <input type="text" name="searchValue" id="searchValue" [formControl]="searchValue">
+              <button (click)="updateResults()" class="btn btn-success">Buscar</button>
+            
+            
             <table class="table table-dark">
                 <thead>
                   <tr>
-                    <th scope="col">Nombre</th>
+                    <th scope="col">Id</th>
+                    <th  scope="col">Nombre</th>
                     <th scope="col">Fecha de nacimiento</th>
                     <th scope="col">Sexo</th>
                     <th scope="col">Telefono</th>
@@ -13,8 +26,9 @@
                     <th scope="col">Ult. Modificación</th>
                   </tr>
                 </thead>
-                <tbody *ngFor="let empleado of empleados">
-                  <tr>
+                <tbody >
+                  <tr *ngFor="let empleado of empleadosActivos | slice: (page-1) * pageSize : page * pageSize">
+                    <th>{{empleado.id}}</th>
                     <th scope="row">{{empleado.surname}} {{empleado.surname2}}, {{empleado.name}}</th>
                     <td>{{empleado.datebirthday | date: 'yyyy-MM-dd' }}</td>
                     <td>{{empleado.sex}}</td>
@@ -25,6 +39,7 @@
                   
                 </tbody>
               </table>
+              <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="empleadosActivos.length" [maxSize]="5"></ngb-pagination>
         </div>
     </div>
 </div>
