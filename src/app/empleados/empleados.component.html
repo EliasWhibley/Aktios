@@ -42,7 +42,7 @@
                   
                 </tbody>
               </table>
-              <!-- He utilizado ng-bootstrap para crear el paginador -->
+              <!-- He utilizado ng-bootstrap para crear el paginador. En un supuesto donde pidieramos la info a una API, no guardaríamos el json en Assets y paginaríamos utilizando las peticiones.-->
               <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="empleadosActivos.length" [maxSize]="5"></ngb-pagination>
         </div>
     </div>
